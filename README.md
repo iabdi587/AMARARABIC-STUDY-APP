@@ -6,12 +6,12 @@ An Expo / React Native application for **native iOS and web**, with a navy, teal
 
 - 15 level slots; Level 1 is populated, remaining levels await course content.
 - Selected Arabic vocabulary organised by the PDF's 11 topic sections (topics 7–8 are combined).
-- Click/tap a word to play an imported recording. No generated or substitute Sheikh voice.
-- Import audio per word, with optional start and end offsets for longer clips.
+- Click/tap a word to play its bundled recording. No generated or substitute Sheikh voice.
+- One developer-managed audio file per word, shared by the web and native iOS builds.
 - Flashcards, vocabulary quizzes, bookmarks and learned-word tracking.
 - Complete original 149-page student revision PDF, including grammar, worksheets and answer sheets.
 - On native iOS the PDF opens through the system share sheet; choose a PDF reader / Save to Files. The full PDF is bundled and available offline in the installed app.
-- Local recordings and progress persist on the current device. No cross-device sync or backend account exists.
+- Learning progress persists on the current device. No cross-device progress sync or backend account exists.
 
 ## Development
 
@@ -53,7 +53,17 @@ The `eas.json` file includes preview and production build profiles. Native iOS s
 
 Vocabulary lives in `src/course.ts`. The full source PDF is `assets/level-1-notes.pdf`; the web copy is `public/assets/level-1-notes.pdf`. Selected vocabulary is a starter study set, not a complete transcription. Use the original notes as the source of truth for tables and grammar.
 
-Audio library → choose a word → choose an audio file → optionally enter start/end seconds → Save. Web stores blobs in IndexedDB; native stores files in the app documents directory and metadata in AsyncStorage. Removing app/browser data removes these local records. Long recording imports are copied per word; short individual clips use less storage.
+Add the Sheikh’s individual word recordings directly to `assets/audio/level-1/`, then map them to word IDs in `src/wordAudio.ts`. For example, after adding `head.mp3`:
+
+```ts
+export const wordAudio: Readonly<Partial<Record<string, number>>> = {
+  '1-Head-0': require('../assets/audio/level-1/head.mp3'),
+};
+```
+
+`1-Head-0` is the ID of رَأْسٌ (Head). IDs are generated in `src/course.ts` from the topic number, group, and zero-based row index; keep IDs stable to preserve saved progress. Use literal `require` paths so Metro includes the audio in both web and native iOS builds. MP3 and M4A are suitable formats. Add the file before adding the map entry, then rebuild and publish the app.
+
+Unmapped words show “Audio coming soon”. Students only listen: there are no upload, trim, or file-management controls. Each mapped file plays from the beginning to the end. Existing local imports are no longer used; stored learning progress is preserved.
 
 ## Verification
 

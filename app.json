@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "AMAR Arabic Study",
+    "slug": "amar-arabic-study",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "dark",
+    "scheme": "amarstudy",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ismail.amarstudy",
+      "infoPlist": {
+        "UIBackgroundModes": []
+      }
+    },
+    "android": {
+      "package": "com.ismail.amarstudy"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "AMAR Arabic Study",
+      "favicon": "./assets/icon.png"
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "enableBackgroundRecording": false,
+          "enableBackgroundPlayback": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-document-picker"
+    ],
+    "icon": "./assets/icon.png"
+  }
+}

@@ -12,6 +12,6 @@ export const supabase = url && key ? createClient(url, key, {
     ...(Platform.OS !== 'web' ? { storage: AsyncStorage, lock: processLock } : {}),
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: true,
   },
 }) : null;

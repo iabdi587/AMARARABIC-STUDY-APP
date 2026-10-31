@@ -31,7 +31,8 @@
           "enableBackgroundPlayback": false,
           "recordAudioAndroid": false
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "icon": "./assets/icon.png"
   }

@@ -29,6 +29,14 @@ npm run build:web
 
 This is React Native UI, not a WebView or a PWA wrapper.
 
+For an iPhone using Expo Go from the App Store, this project targets Expo SDK 54. Start a tunnel if your phone cannot reach the development computer over the local network:
+
+```sh
+npx expo start --go --tunnel --clear
+```
+
+Scan the terminal QR code with the iPhone Camera and open it in Expo Go. Keep the server running and use the newly generated QR code after restarting.
+
 On macOS with Xcode and CocoaPods:
 
 ```sh

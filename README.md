@@ -11,7 +11,7 @@ An Expo / React Native application for **native iOS and web**, with a navy, teal
 - Flashcards, vocabulary quizzes, bookmarks and learned-word tracking.
 - Complete original 149-page student revision PDF, including grammar, worksheets and answer sheets.
 - On native iOS the PDF opens through the system share sheet; choose a PDF reader / Save to Files. The full PDF is bundled and available offline in the installed app.
-- Learning progress persists on the current device. No cross-device progress sync or backend account exists.
+- Optional email-code accounts with learned-word and bookmark syncing through Supabase; guest study and offline caching remain available. Live accounts require the Supabase and email-sender setup described below.
 
 ## Development
 
@@ -64,6 +64,10 @@ export const wordAudio: Readonly<Partial<Record<string, number>>> = {
 `1-Head-0` is the ID of رَأْسٌ (Head). IDs are generated in `src/course.ts` from the topic number, group, and zero-based row index; keep IDs stable to preserve saved progress. Use literal `require` paths so Metro includes the audio in both web and native iOS builds. MP3 and M4A are suitable formats. Add the file before adding the map entry, then rebuild and publish the app.
 
 Unmapped words show “Audio coming soon”. Students only listen: there are no upload, trim, or file-management controls. Each mapped file plays from the beginning to the end. Existing local imports are no longer used; stored learning progress is preserved.
+
+## Accounts and cloud progress
+
+The sign-in UI, offline sync queue, and Supabase database migration are implemented. See [account setup](docs/ACCOUNTS.md) for activation and current prerequisites. A Supabase connection and production email sender are still required; without configuration the app continues in guest mode.
 
 ## Verification
 

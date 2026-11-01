@@ -6,6 +6,14 @@
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "scheme": "amarstudy",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F1829"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ismail.amarstudy",
@@ -14,7 +22,11 @@
       }
     },
     "android": {
-      "package": "com.ismail.amarstudy"
+      "package": "com.ismail.amarstudy",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#0F1829"
+      }
     },
     "web": {
       "bundler": "metro",

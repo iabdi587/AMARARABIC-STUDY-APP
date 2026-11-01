@@ -8,7 +8,8 @@ An Expo / React Native application for **native iOS and web**, with a navy, teal
 - Selected Arabic vocabulary organised by the PDF's 11 topic sections (topics 7–8 are combined).
 - Click/tap a word to play its bundled recording. No generated or substitute Sheikh voice.
 - One developer-managed audio file per word, shared by the web and native iOS builds.
-- Flashcards, vocabulary quizzes, bookmarks and learned-word tracking.
+- Flashcards show only unlearned words. Restore words through Learn → Learned → Move to learning.
+- Practice shuffles every vocabulary word and its answer choices for each new round; bookmarks and learned-word tracking remain available.
 - Complete original 149-page student revision PDF, including grammar, worksheets and answer sheets.
 - On native iOS the PDF opens through the system share sheet; choose a PDF reader / Save to Files. The full PDF is bundled and available offline in the installed app.
 - Optional email-code accounts with learned-word and bookmark syncing through Supabase; guest study and offline caching remain available. Live accounts require the Supabase and email-sender setup described below.

@@ -31,6 +31,7 @@ export const wordAudio: Readonly<Partial<Record<string, number>>> = {
   // Numbers
   '2-Fundamentals-0': require('../assets/audio/level-1/numbers/zero.mp3'), // Zero
   '2-Fundamentals-1': require('../assets/audio/level-1/numbers/one.mp3'), // One
+  '2-Fundamentals-2': require('../assets/audio/level-1/numbers/two.mp3'), // Two
   '2-Fundamentals-3': require('../assets/audio/level-1/numbers/three.mp3'), // Three
   '2-Fundamentals-4': require('../assets/audio/level-1/numbers/four.mp3'), // Four
   '2-Fundamentals-5': require('../assets/audio/level-1/numbers/five.mp3'), // Five

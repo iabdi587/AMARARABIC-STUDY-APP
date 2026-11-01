@@ -2,6 +2,7 @@ node_modules/
 .expo/
 dist/
 *.tar.gz
+*_backup/
 .DS_Store
 .env
 .env.*

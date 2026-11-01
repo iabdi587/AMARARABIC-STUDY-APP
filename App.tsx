@@ -8,7 +8,7 @@ import * as Sharing from 'expo-sharing';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {topics,Word,Topic} from './src/course';
 import {wordAudio} from './src/wordAudio';
-import {createPractice} from './src/practice';
+import {createPractice,shuffled} from './src/practice';
 import {useStudyAccount} from './src/auth/useStudyAccount';
 import {AccountModal} from './src/auth/AccountModal';
 const C={bg:'#0F1829',panel:'#152535',panel2:'#1a3041',border:'#294151',muted:'#9aadb9',white:'#f5f4ef',orange:'#ED8C44',cyan:'#6EC1D6',green:'#9cceb0'};
@@ -26,6 +26,7 @@ function StudyApp(){
  const [page,setPage]=useState<Page>('Learn'),[topic,setTopic]=useState(topics[0]),[level,setLevel]=useState(1),[levelPicker,setLevelPicker]=useState(false),[topicPicker,setTopicPicker]=useState(false),[search,setSearch]=useState(''),[group,setGroup]=useState('All groups'),[notice,setNotice]=useState(''),[help,setHelp]=useState(false),[card,setCard]=useState(0),[flipped,setFlipped]=useState(false),[quizIndex,setQuizIndex]=useState(0),[choice,setChoice]=useState<string|null>(null),[score,setScore]=useState(0),[savedOnly,setSavedOnly]=useState(false);
  const [learningFilter,setLearningFilter]=useState<'all'|'learning'|'learned'>('all');
  const [practiceQuestions,setPracticeQuestions]=useState(()=>createPractice(topics[0].words));
+ const [flashcardOrder,setFlashcardOrder]=useState(()=>shuffled(topics[0].words));
  const player=useAudioPlayer(null,{updateInterval:100});const status=useAudioPlayerStatus(player);const [playing,setPlaying]=useState<string|null>(null);
  useEffect(()=>{setAudioModeAsync({playsInSilentMode:true}).catch(()=>{});},[]);
  useEffect(()=>{if(account.error){setNotice(account.error);account.clearError();}},[account.error]);
@@ -33,19 +34,30 @@ function StudyApp(){
  useEffect(()=>{if(notice){const t=setTimeout(()=>setNotice(''),6500);return()=>clearTimeout(t);}},[notice]);
  const mark=(id:string)=>{void account.toggle(id,'learned');};
  const toggleSaved=(id:string)=>{void account.toggle(id,'saved');};
- const selectTopic=(t:Topic)=>{setLearningFilter('all');setPracticeQuestions(createPractice(t.words));setTopic(t);setLevel(1);setSearch('');setGroup('All groups');setCard(0);setFlipped(false);setQuizIndex(0);setChoice(null);setScore(0);};
- const navigate=(p:Page)=>{if(p==='Practice')setPracticeQuestions(createPractice(topic.words));player.pause();setPlaying(null);setPage(p);setChoice(null);setQuizIndex(0);setScore(0);};
+ const selectTopic=(t:Topic)=>{reshuffleFlashcards(t.words);setLearningFilter('all');setPracticeQuestions(createPractice(t.words));setTopic(t);setLevel(1);setSearch('');setGroup('All groups');setCard(0);setFlipped(false);setQuizIndex(0);setChoice(null);setScore(0);};
+ const navigate=(p:Page)=>{if(p==='Flashcards')reshuffleFlashcards();if(p==='Practice')setPracticeQuestions(createPractice(topic.words));player.pause();setPlaying(null);setPage(p);setChoice(null);setQuizIndex(0);setScore(0);};
  async function play(w:Word){const source=wordAudio[w.id];if(source===undefined){setNotice('The recording for this word is coming soon.');return;}try{player.pause();player.replace(source);await player.seekTo(0);player.play();setPlaying(w.id);}catch{setPlaying(null);setNotice('This recording could not play. Please try again.');}}
  async function openNotes(p=topic.page){try{if(Platform.OS==='web'){await Linking.openURL(`/assets/level-1-notes.pdf#page=${p+1}`);}else{const a=Asset.fromModule(require('./assets/level-1-notes.pdf'));await a.downloadAsync();if(a.localUri&&await Sharing.isAvailableAsync())await Sharing.shareAsync(a.localUri,{mimeType:'application/pdf',UTI:'com.adobe.pdf',dialogTitle:`Level 1 notes · printed page ${p}`});else setNotice('PDF sharing is unavailable on this device.');}}catch{setNotice('Unable to open the notes. Please try again.');}}
  const norm=(v:string)=>v.normalize('NFD').replace(/[\u064B-\u065F\u0670\u0300-\u036f]/g,'').toLowerCase();
  const visible=topic.words.filter(w=>(group==='All groups'||w.group===group)&&(learningFilter==='all'||(learningFilter==='learned'?known.includes(w.id):!known.includes(w.id)))&&(!savedOnly||saved.includes(w.id))&&norm(`${w.arabic} ${w.english} ${w.transliteration}`).includes(norm(search)));
  const pct=Math.round(known.filter(id=>topic.words.some(w=>w.id===id)).length/topic.words.length*100);
- const flashcards=topic.words.filter(w=>!known.includes(w.id));
+ const flashcards=flashcardOrder.filter(w=>!known.includes(w.id));
  const cardIndex=flashcards.length?card%flashcards.length:0;
  const currentCard=flashcards[cardIndex];
  const quizWord=practiceQuestions[quizIndex]?.word||topic.words[0];
  const options=practiceQuestions[quizIndex]?.options||[];
  useEffect(()=>{setFlipped(false);},[currentCard?.id]);
+ function reshuffleFlashcards(words:Word[]=topic.words){
+   const order=shuffled(words);
+   const previous=flashcardOrder.filter(w=>!known.includes(w.id));
+   const remaining=order.filter(w=>!known.includes(w.id));
+   // With a small deck a random shuffle can repeat. Make an explicit shuffle visibly different.
+   if(remaining.length>1&&remaining.length===previous.length&&remaining.every((w,i)=>w.id===previous[i].id)){
+     const first=order.indexOf(remaining[0]),second=order.indexOf(remaining[1]);
+     [order[first],order[second]]=[order[second],order[first]];
+   }
+   player.pause();setPlaying(null);setFlashcardOrder(order);setCard(0);setFlipped(false);
+ }
  async function reviewFlashcard(learned:boolean){
    if(reviewBusy||!currentCard)return;
    setReviewBusy(true);
@@ -82,7 +94,7 @@ function StudyApp(){
  <Text style={[s.tiny,{marginTop:26,lineHeight:20}]}>Selected study vocabulary · Full tables, grammar, worksheets and answers are in the attached notes. Personal companion inspired by AMAR; independently built.</Text></>}
  {page==='Flashcards'&&<><TopicHeading topic={topic}/>
  {!currentCard?<View style={s.empty}><Icon name="checkmark-circle-outline" color={C.green} size={45}/><Text style={s.sectionTitle}>All words in this lesson are learned.</Text><Text style={[s.body,{textAlign:'center'}]}>To add a word back to flashcards, go to Learn → Learned and choose “Move to learning”.</Text><Button onPress={()=>{setLearningFilter('learned');setGroup('All groups');setSearch('');setSavedOnly(false);navigate('Learn');}}>View learned words</Button></View>:<>
- <Text style={[s.tiny,{textAlign:'center',marginVertical:20}]}>CARD {cardIndex+1} OF {flashcards.length} · STILL LEARNING</Text>
+ <View style={[s.between,{marginVertical:20,flexWrap:'wrap',gap:12}]}><Text style={s.tiny}>CARD {cardIndex+1} OF {flashcards.length} · STILL LEARNING</Text><Button secondary disabled={reviewBusy||flashcards.length<2} icon="shuffle-outline" onPress={()=>reshuffleFlashcards()}>Shuffle cards</Button></View>
  <Pressable accessibilityRole="button" accessibilityLabel="Flip flashcard" onPress={()=>setFlipped(!flipped)} style={s.flashCard}><Text style={s.eyebrow}>{flipped?'THE MEANING':'CAN YOU REMEMBER THIS WORD?'}</Text><Text style={flipped?s.heroTitle:s.flashArabic}>{flipped?currentCard.english:currentCard.arabic}</Text><Text style={s.subtitle}>{flipped?currentCard.transliteration:'Tap the card to reveal the meaning'}</Text></Pressable>
  <View style={[s.row,{justifyContent:'center',marginVertical:22,flexWrap:'wrap'}]}>
  <Button secondary disabled={wordAudio[currentCard.id]===undefined} icon="volume-medium-outline" onPress={()=>play(currentCard)}>Listen</Button>

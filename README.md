@@ -61,11 +61,11 @@ The `eas.json` file includes preview and production build profiles. Native iOS s
 
 Vocabulary lives in `src/course.ts`. The full source PDF is `assets/level-1-notes.pdf`; the web copy is `public/assets/level-1-notes.pdf`. Selected vocabulary is a starter study set, not a complete transcription. Use the original notes as the source of truth for tables and grammar.
 
-Add the Sheikh’s individual word recordings directly to `assets/audio/level-1/`, then map them to word IDs in `src/wordAudio.ts`. For example, after adding `head.mp3`:
+Add the Sheikh’s individual word recordings directly to `assets/audio/level-1/body-parts/` or `assets/audio/level-1/numbers/`, then map them to word IDs in `src/wordAudio.ts`. For example, after adding `head.mp3`:
 
 ```ts
 export const wordAudio: Readonly<Partial<Record<string, number>>> = {
-  '1-Head-0': require('../assets/audio/level-1/head.mp3'),
+  '1-Head-0': require('../assets/audio/level-1/body-parts/head.mp3'),
 };
 ```
 

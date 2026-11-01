@@ -23,7 +23,7 @@ export const topics: Topic[] = [
 رُكْبَةٌ|Knee|rukbatun
 سَاقٌ|Shin|sāqun
 قَدَمٌ|Foot|qadamun`)]},
-{id:2,title:'Numbers',arabic:'الْأَرْقَامُ',lessons:'02',page:12,worksheet:18,answer:25,description:'Build your confidence with numbers, from zero to thousands.',words:make(2,'Fundamentals',`صِفْرٌ|Zero|ṣifrun
+{id:2,title:'Numbers',arabic:'الْأَرْقَامُ',lessons:'02',page:12,worksheet:18,answer:25,description:'Build your confidence with numbers, from zero to a million.',words:make(2,'Fundamentals',`صِفْرٌ|Zero|ṣifrun
 وَاحِدٌ|One|wāḥidun
 اِثْنَانِ|Two|ithnāni
 ثَلَاثَةٌ|Three|thalāthatun
@@ -43,7 +43,16 @@ export const topics: Topic[] = [
 ثَمَانُونَ|Eighty|thamānūna
 تِسْعُونَ|Ninety|tisʿūna
 مِائَةٌ|One hundred|miʾatun
-أَلْفٌ|One thousand|alfun`)},
+أَلْفٌ|One thousand|alfun
+مِائَتَانِ|Two hundred|miʾatāni
+ثَلَاثُمِائَة|Three hundred|thalāthumiʾah
+أَرْبَعُمِائَة|Four hundred|arbaʿumiʾah
+خَمْسُمِائَة|Five hundred|khamsumiʾah
+سِتُّمِائَة|Six hundred|sittumiʾah
+سَبْعُمِائَة|Seven hundred|sabʿumiʾah
+ثَمَانِمِائَة|Eight hundred|thamānimiʾah
+تِسْعُمِائَة|Nine hundred|tisʿumiʾah
+مِلْيُونٌ|One million|milyūnun`)},
 {id:3,title:'Telling the time',arabic:'السَّاعَةُ',lessons:'03',page:28,worksheet:30,answer:39,description:'Read the clock and talk about the time in Arabic.',words:make(3,'Time',`سَاعَةٌ|Hour / clock|sāʿatun
 دَقِيقَةٌ|Minute|daqīqatun
 ثَانِيَةٌ|Second|thāniyatun
